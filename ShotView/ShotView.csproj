@@ -94,5 +94,33 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\unzoom.png" />
+    <Resource Include="Resources\zoom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\left.png" />
+    <Resource Include="Resources\right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\slideshow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\stretch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\rotate-left.png" />
+    <Resource Include="Resources\rotate-right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\flip-vertical.png" />
+    <Resource Include="Resources\flip-horizontal.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

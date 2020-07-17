@@ -5,8 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ShotView"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Background="#303030"
+        Title="ShotView"
+        MinHeight="200" MinWidth="400"
+        Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#212121">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                <Image Source="Resources/open.png" ToolTip="Open image" Width="35" Height="35" Margin="10,0" HorizontalAlignment="Left" MouseLeftButtonUp="OpenImage_MouseLeftButtonUp"/>
+                <Image Source="Resources/slideshow.png" ToolTip="Start slideshow" Width="35" Height="35" Margin="5,0" HorizontalAlignment="Left" MouseLeftButtonUp="Slideshow_MouseLeftButtonUp"/>
+                <Image Source="Resources/delete.png" ToolTip="Delete" Width="35" Height="35" Margin="5,0" MouseLeftButtonUp="Delete_MouseLeftButtonUp"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
+                <Image Source="Resources/rotate-left.png" ToolTip="Rotate left" Width="35" Height="35" Margin="5,0" MouseLeftButtonUp="RotateLeft_MouseLeftButtonUp"/>
+                <Image Source="Resources/rotate-right.png" ToolTip="Rotate right" Width="35" Height="35" Margin="5,0" MouseLeftButtonUp="RotateRight_MouseLeftButtonUp"/>
+                <Image Source="Resources/flip-horizontal.png" ToolTip="Flip horizontally" Width="35" Height="35" Margin="5,0" MouseLeftButtonUp="FlipHorizontal_MouseLeftButtonUp"/>
+                <Image Source="Resources/flip-vertical.png" ToolTip="Flip vertically" Width="35" Height="35" Margin="5,0" MouseLeftButtonUp="FlipVertical_MouseLeftButtonUp"/>
+                <Image Source="Resources/zoom.png" ToolTip="Zoom" Width="35" Height="35" Margin="5,0" MouseLeftButtonUp="Zoom_MouseLeftButtonUp"/>
+                <Image Source="Resources/stretch.png" ToolTip="Stretch image" Width="35" Height="35" Margin="10,0" MouseLeftButtonUp="Stretch_MouseLeftButtonUp"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                <Image Source="Resources/left.png" ToolTip="Previous image" Width="35" Height="35" Margin="5,0" MouseLeftButtonUp="Previous_MouseLeftButtonUp"/>
+                <Image Source="Resources/right.png" ToolTip="Next image" Width="35" Height="35" Margin="10,0" MouseLeftButtonUp="Next_MouseLeftButtonUp"/>
+            </StackPanel>
+        </Grid>
+
+        <Image x:Name="MainImage" Grid.Row="1" Panel.ZIndex="-9" Source="D:\Pictures\images (1).png" Width="232" Height="217" RenderTransformOrigin="0.5,0.5"/>
+        <Border x:Name="ZoomBorder" Grid.Row="1" Background="#212121" Width="150" Height="40" VerticalAlignment="Top" Margin="10" Visibility="Hidden">
+            <Slider x:Name="ZoomSlider" VerticalAlignment="Center" Minimum="1" TickFrequency="0.1" IsSnapToTickEnabled="True" Maximum="5" Width="130" ValueChanged="ZoomSlider_ValueChanged"/>
+        </Border>
     </Grid>
 </Window>
