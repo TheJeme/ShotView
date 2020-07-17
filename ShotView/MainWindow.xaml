@@ -9,7 +9,8 @@
         Title="ShotView"
         MinHeight="200" MinWidth="400"
         Height="450" Width="800"
-        SizeChanged="Window_SizeChanged">
+        SizeChanged="Window_SizeChanged"
+        KeyDown="Window_KeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -42,7 +43,7 @@
                 <Image Source="Resources/right.png" ToolTip="Next image" Width="35" Height="35" Margin="10,0" MouseLeftButtonUp="Next_MouseLeftButtonUp"/>
             </StackPanel>
         </Grid>
-
+    
         <Image x:Name="MainImage" Grid.Row="1" Panel.ZIndex="-9" Source="D:\Pictures\images (1).png" Width="232" Height="217" RenderTransformOrigin="0.5,0.5"/>
         <Border x:Name="ZoomBorder" Grid.Row="1" Background="#212121" Width="150" Height="40" VerticalAlignment="Top" Margin="10" Visibility="Hidden">
             <Slider x:Name="ZoomSlider" VerticalAlignment="Center" Minimum="1" TickFrequency="0.1" IsSnapToTickEnabled="True" Maximum="5" Width="130" ValueChanged="ZoomSlider_ValueChanged"/>
