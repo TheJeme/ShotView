@@ -16,14 +16,15 @@ namespace ShotView
             InitializeComponent();
 
             imageView = new ImageView(this, MainImage);
-
-            string[] extensions = { ".jpg", ".jpeg", ".bmp", ".jpe", ".jfif", ".png" };
-
-            string extension = filePath.Substring(filePath.LastIndexOf('.'));
-
-            if (extensions.Any(x => extension.ToLower().Contains(x)) && filePath != "")
+            if (!String.IsNullOrEmpty(filePath))
             {
-                imageView.OpenImage(filePath);
+                string[] extensions = { ".jpg", ".jpeg", ".bmp", ".jpe", ".jfif", ".png" };
+
+                string extension = filePath.Substring(filePath.LastIndexOf('.'));
+                if (extensions.Any(x => extension.ToLower().Contains(x)))
+                {
+                    imageView.OpenImage(filePath);
+                }
             }
 
             dt = new DispatcherTimer();
