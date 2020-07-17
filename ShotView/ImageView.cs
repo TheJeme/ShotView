@@ -45,7 +45,7 @@ namespace ShotView
             imagesInFolder = new List<string>();
         }
 
-        public static ImageSource BitmapFromUri(Uri source)
+        private static ImageSource BitmapFromUri(Uri source)
         {
             var bitmap = new BitmapImage();
             bitmap.BeginInit();
@@ -68,16 +68,7 @@ namespace ShotView
 
             isStretchMode = !isStretchMode;
 
-            if (isStretchMode)
-            {
-                mainImage.Width = Double.NaN;
-                mainImage.Height = Double.NaN;
-            }
-            else
-            {
-                mainImage.Width = ClampDimensions(currentImageSource.Width, 1, mainWindow.ActualWidth);
-                mainImage.Height = ClampDimensions(currentImageSource.Height, 1, mainWindow.ActualHeight - 40);
-            }
+            Resize();
         }
 
         public void Zoom(object sender)
@@ -107,7 +98,7 @@ namespace ShotView
             mainImage.RenderTransform = scaleTransform;
         }
 
-        public void OpenImage()
+        public void OpenImageFileDialog()
         {
             OpenFileDialog dlg = new OpenFileDialog();
 
@@ -117,31 +108,41 @@ namespace ShotView
 
             if (result.HasValue && result.Value)
             {
-                filePath = dlg.FileName;
-                folderPath = Path.GetDirectoryName(filePath);
+                OpenImage(dlg.FileName);
+            }
+        }
 
-                currentImageSource = BitmapFromUri(new Uri(filePath));
-                mainImage.Source = currentImageSource;
+        public void OpenImage(string _filePath)
+        {
+            filePath = _filePath;
 
-                mainImage.Width = ClampDimensions(currentImageSource.Width, 1, mainWindow.ActualWidth);
-                mainImage.Height = ClampDimensions(currentImageSource.Height, 1, mainWindow.ActualHeight - 40);
+            currentImageSource = BitmapFromUri(new Uri(filePath));
+            mainImage.Source = currentImageSource;
 
-                string[] extensions = { ".jpg", ".jpeg", ".bmp", ".jpe", ".jfif", ".png" };
+            Resize();
+            addImagesToList(filePath);
+        }
+
+        public void addImagesToList(string filePath)
+        {
+            folderPath = Path.GetDirectoryName(filePath);
+
+            string[] extensions = { ".jpg", ".jpeg", ".bmp", ".jpe", ".jfif", ".png" };
 
 
-                foreach (var file in Directory.GetFiles(folderPath))
+            foreach (var file in Directory.GetFiles(folderPath))
+            {
+                string extension = file.Substring(file.LastIndexOf('.'));
+
+                if (extensions.Any(x => extension.ToLower().Contains(x)))
                 {
-                    string extension = file.Substring(file.LastIndexOf('.'));
+                    imagesInFolder.Add(file);
+                }
+            }
 
-                    if (extensions.Any(x => extension.ToLower().Contains(x)))
-                    {
-                        imagesInFolder.Add(file);
-                    }
-                }
-                if (File.Exists(filePath))
-                {
-                    indexOfImageFolder = imagesInFolder.IndexOf(filePath);
-                }
+            if (File.Exists(filePath))
+            {
+                indexOfImageFolder = imagesInFolder.IndexOf(filePath);
             }
         }
 
@@ -170,15 +171,13 @@ namespace ShotView
 
         public void NextImage()
         {
-            if (indexOfImageFolder == imagesInFolder.Count - 1 && imagesInFolder.Count > 0) return;
-
+            if (indexOfImageFolder == imagesInFolder.Count - 1 || imagesInFolder.Count == 0) return;
             indexOfImageFolder++;
             filePath = imagesInFolder[indexOfImageFolder];
             currentImageSource = BitmapFromUri(new Uri(filePath));
             mainImage.Source = currentImageSource;
 
-            mainImage.Width = ClampDimensions(currentImageSource.Width, 1, mainWindow.ActualWidth);
-            mainImage.Height = ClampDimensions(currentImageSource.Height, 1, mainWindow.ActualHeight - 40);
+            Resize();
         }
 
         public void PreviousImage()
@@ -190,8 +189,7 @@ namespace ShotView
             currentImageSource = BitmapFromUri(new Uri(filePath));
             mainImage.Source = currentImageSource;
 
-            mainImage.Width = ClampDimensions(currentImageSource.Width, 1, mainWindow.ActualWidth);
-            mainImage.Height = ClampDimensions(currentImageSource.Height, 1, mainWindow.ActualHeight - 40);
+            Resize();
         }
 
         public void Resize()
@@ -205,8 +203,16 @@ namespace ShotView
             }
             else
             {
-                mainImage.Width = ClampDimensions(currentImageSource.Width, 1, mainWindow.ActualWidth);
-                mainImage.Height = ClampDimensions(currentImageSource.Height, 1, mainWindow.ActualHeight - 40);
+                if (mainWindow.ActualWidth == 0)
+                {
+                    mainImage.Width = ClampDimensions(currentImageSource.Width, 1, mainWindow.Width);
+                    mainImage.Height = ClampDimensions(currentImageSource.Height, 1, mainWindow.Height - 40);
+                }
+                else
+                {
+                    mainImage.Width = ClampDimensions(currentImageSource.Width, 1, mainWindow.ActualWidth);
+                    mainImage.Height = ClampDimensions(currentImageSource.Height, 1, mainWindow.ActualHeight - 40);
+                }
             }
         }
 

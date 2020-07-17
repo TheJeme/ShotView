@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace ShotView
@@ -13,5 +8,23 @@ namespace ShotView
     /// </summary>
     public partial class App : Application
     {
+        void Application_Start(object sender, StartupEventArgs args)
+        {
+            string[] a = Environment.GetCommandLineArgs();
+
+            string filepath;
+
+            if (a.Length > 1)
+            {
+                filepath = a[1];
+            }
+            else
+            {
+                filepath = "";
+            }
+
+            MainWindow main = new MainWindow(filepath);                        
+            main.Show();
+        }
     }
 }

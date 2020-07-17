@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace ShotView
 {
@@ -8,21 +11,57 @@ namespace ShotView
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(string filePath)
         {
             InitializeComponent();
 
             imageView = new ImageView(this, MainImage);
 
+            string[] extensions = { ".jpg", ".jpeg", ".bmp", ".jpe", ".jfif", ".png" };
+
+            string extension = filePath.Substring(filePath.LastIndexOf('.'));
+
+            if (extensions.Any(x => extension.ToLower().Contains(x)) && filePath != "")
+            {
+                imageView.OpenImage(filePath);
+            }
+
+            dt = new DispatcherTimer();
+            dt.Interval = TimeSpan.FromSeconds(3);
+            dt.Tick += dtTicker;            
+
             isFullScreen = false;
+            isSlideShow = false;
         }
 
         private bool isFullScreen;
+        private bool isSlideShow;
+
+        DispatcherTimer dt;
 
         ImageView imageView;
 
+        private void dtTicker(object sender, EventArgs e)
+        {
+            imageView.NextImage();
+        }
+
         private void ToggleFullScreen(KeyEventArgs e)
         {
+            if (e.Key == Key.Delete)
+            {
+                imageView.DeleteImage();
+            }
+
+            if (e.Key == Key.Left)
+            {
+                imageView.PreviousImage();
+            }
+            else if (e.Key == Key.Right)
+            {
+                imageView.NextImage();
+            }
+
             if (e.Key == Key.F11)
             {
                 if (!isFullScreen)
@@ -37,21 +76,37 @@ namespace ShotView
                 }
                 isFullScreen = !isFullScreen;
             }
+            else if (e.Key == Key.F11 && isFullScreen)
+            {
+                WindowState = WindowState.Normal;
+                WindowStyle = WindowStyle.SingleBorderWindow;
+
+                isFullScreen = false;
+            }
         }
 
         private void OpenImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            imageView.OpenImage();         
+            imageView.OpenImageFileDialog();         
         }
     
 
         private void Slideshow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            isSlideShow = !isSlideShow;
 
+            if (isSlideShow)
+            {
+                dt.Start();
+            }
+            else
+            {
+                dt.Stop();
+            }
         }
 
 
-        private void Delete_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void DeleteImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             imageView.DeleteImage();
         }
@@ -114,6 +169,20 @@ namespace ShotView
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             ToggleFullScreen(e);
+        }
+
+        private void HideTopbar_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (TopBarGrid.Visibility == Visibility.Visible)
+            {
+                TopBarGrid.Visibility = Visibility.Collapsed;
+                TopBarHiderLabel.Content = "↓ ↓ ↓";
+            }
+            else if (TopBarGrid.Visibility == Visibility.Collapsed)
+            {
+                TopBarGrid.Visibility = Visibility.Visible;
+                TopBarHiderLabel.Content = "↑ ↑ ↑";
+            }
         }
     }
 }
