@@ -202,6 +202,8 @@ namespace ShotView
 
         private void Stretch_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            if (currentImageSource == null) return;
+
             isStretchMode = !isStretchMode;
 
             if (isStretchMode)
@@ -211,8 +213,8 @@ namespace ShotView
             }
             else
             {
-                MainImage.Width = 200;
-                MainImage.Height = 200;
+                MainImage.Width = ClampDimensions(currentImageSource.Width, 1, this.ActualWidth);
+                MainImage.Height = ClampDimensions(currentImageSource.Height, 1, this.ActualHeight - 40);
             }
         }
 
@@ -246,8 +248,24 @@ namespace ShotView
         {
             var slider = sender as Slider;
 
-            imageScaleX = slider.Value;
-            imageScaleY = slider.Value;
+            if (imageScaleX >= 0)
+            {
+                imageScaleX = slider.Value;
+            }
+            else
+            {
+                imageScaleX = slider.Value * -1;
+            }
+
+            if (imageScaleY >= 0)
+            {
+                imageScaleY = slider.Value;
+            }
+            else
+            {
+                imageScaleY = slider.Value * -1;
+            }
+
 
             ScaleTransform scaleTransform = new ScaleTransform(imageScaleX, imageScaleY);
             MainImage.RenderTransform = scaleTransform;
@@ -257,8 +275,16 @@ namespace ShotView
         {
             if (currentImageSource == null) return;
 
-            MainImage.Width = ClampDimensions(currentImageSource.Width, 1, this.ActualWidth);
-            MainImage.Height = ClampDimensions(currentImageSource.Height, 1, this.ActualHeight - 40);
+            if (isStretchMode)
+            {
+                MainImage.Width = Double.NaN;
+                MainImage.Height = Double.NaN;
+            }
+            else
+            {
+                MainImage.Width = ClampDimensions(currentImageSource.Width, 1, this.ActualWidth);
+                MainImage.Height = ClampDimensions(currentImageSource.Height, 1, this.ActualHeight - 40);
+            }
         }
     }
 }
