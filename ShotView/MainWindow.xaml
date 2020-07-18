@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Background="#303030"
         Title="ShotView"
-        MinHeight="200" MinWidth="400"
-        Height="450" Width="800"
+        MinHeight="300" MinWidth="400"
+        Height="600" Width="800"
         SizeChanged="Window_SizeChanged"
         KeyDown="Window_KeyDown">
     <Grid>
@@ -27,6 +27,7 @@
                 <Image Source="Resources/open.png" ToolTip="Open image" Width="35" Height="35" Margin="10,0" HorizontalAlignment="Left" MouseLeftButtonUp="OpenImage_MouseLeftButtonUp"/>
                 <Image Source="Resources/slideshow.png" ToolTip="Slideshow" Width="35" Height="35" Margin="5,0" HorizontalAlignment="Left" MouseLeftButtonUp="Slideshow_MouseLeftButtonUp"/>
                 <Image Source="Resources/delete.png" ToolTip="Delete" Width="35" Height="35" Margin="5,0" MouseLeftButtonUp="DeleteImage_MouseLeftButtonUp"/>
+                <Image Source="Resources/info.png" ToolTip="Info" Width="35" Height="35" Margin="5,0" MouseLeftButtonUp="ShowInfo_MouseLeftButtonUp"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center">
@@ -48,8 +49,27 @@
         <Border x:Name="ZoomBorder" Grid.Row="1" Background="#212121" Width="150" Height="40" VerticalAlignment="Top" Margin="10" Visibility="Hidden">
             <Slider x:Name="ZoomSlider" VerticalAlignment="Center" Minimum="1" TickFrequency="0.1" IsSnapToTickEnabled="True" Maximum="5" Width="130" ValueChanged="ZoomSlider_ValueChanged"/>
         </Border>
+        
         <Border Grid.Row="1" Background="#272727" Width="100" Height="20" VerticalAlignment="Top" CornerRadius="3" MouseLeftButtonUp="HideTopbar_MouseLeftButtonUp">
             <Label x:Name="TopBarHiderLabel" Content="↑ ↑ ↑" FontSize="12" Foreground="#555555" HorizontalAlignment="Center" Padding="0,0,0,1"/>
+        </Border>
+
+        <Border x:Name="InfoPanel" Grid.Row="1" Background="#212121" Width="200" Height="300" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Collapsed">
+            <StackPanel Margin="5">
+                <Label Content="File Info" Foreground="White" FontSize="18" HorizontalAlignment="Center"/>
+                
+                <Label Content="File Name" Foreground="#909090" FontSize="12"/>
+                <Label x:Name="FileInfoFileNameLabel" Content="" Foreground="White" FontSize="12" Margin="6,0"/>
+
+                <Label Content="Folder Path" Foreground="#909090" FontSize="12"/>
+                <Label x:Name="FileInfoFolderPathLabel" Content="" Foreground="White" FontSize="12" Margin="6,0"/>
+
+                <Label Content="Dimensions" Foreground="#909090" FontSize="12"/>
+                <Label x:Name="FileInfoDimensionsLabel" Content="" Foreground="White" FontSize="12" Margin="6,0"/>
+
+                <Label Content="Size" Foreground="#909090" FontSize="12"/>
+                <Label x:Name="FileInfoSizeLabel" Content="" Foreground="White" FontSize="12" Margin="6,0"/>
+            </StackPanel>
         </Border>
     </Grid>
 </Window>

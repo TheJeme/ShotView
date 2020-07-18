@@ -55,11 +55,53 @@ namespace ShotView
             return bitmap;
         }
 
+
         private double ClampDimensions(double value, double min, double max)
         {
             if (value < min) return min;
             else if (value > max) return max;
             else return value;
+        }
+
+        public bool getImageExists()
+        {
+            return File.Exists(filePath);
+        }
+
+        public string GetImageDimensions()
+        {
+            BitmapImage img = new BitmapImage(new Uri(filePath));
+            return img.PixelWidth + "x" + img.PixelHeight;
+        }
+
+        public string GetFolderPath()
+        {
+            return folderPath;
+        }
+
+        public string GetFileName()
+        {
+            return Path.GetFileName(filePath);
+        }
+
+        public string GetFileSize()
+        {
+            string fileSize = GetFileSize(new FileInfo(filePath).Length);
+            return fileSize;
+        }
+
+        
+        public static string GetFileSize(double fileLength)
+        {
+            string[] sizes = { "B", "KB", "MB", "GB" };
+            int order = 0;
+            while (fileLength >= 1024 && order + 1 < sizes.Length)
+            {
+                order++;
+                fileLength = fileLength / 1024;
+            }
+            string result = String.Format("{0:0.##} {1}", fileLength, sizes[order]);
+            return result;
         }
 
         public void StretchImage()
@@ -129,7 +171,7 @@ namespace ShotView
 
             string[] extensions = { ".jpg", ".jpeg", ".bmp", ".jpe", ".jfif", ".png" };
 
-
+            imagesInFolder.Clear();
             foreach (var file in Directory.GetFiles(folderPath))
             {
                 string extension = file.Substring(file.LastIndexOf('.'));
@@ -172,12 +214,23 @@ namespace ShotView
         public void NextImage()
         {
             if (indexOfImageFolder == imagesInFolder.Count - 1 || imagesInFolder.Count == 0) return;
+
             indexOfImageFolder++;
             filePath = imagesInFolder[indexOfImageFolder];
-            currentImageSource = BitmapFromUri(new Uri(filePath));
-            mainImage.Source = currentImageSource;
 
-            Resize();
+            if (!File.Exists(filePath))
+            {
+                mainImage.Source = null;
+                mainImage.Width = Double.NaN;
+                mainImage.Height = Double.NaN;
+            }
+            else
+            {
+                currentImageSource = BitmapFromUri(new Uri(filePath));
+                mainImage.Source = currentImageSource;
+
+                Resize();
+            }
         }
 
         public void PreviousImage()
@@ -186,10 +239,20 @@ namespace ShotView
 
             indexOfImageFolder--;
             filePath = imagesInFolder[indexOfImageFolder];
-            currentImageSource = BitmapFromUri(new Uri(filePath));
-            mainImage.Source = currentImageSource;
 
-            Resize();
+            if (!File.Exists(filePath))
+            {
+                mainImage.Source = null;
+                mainImage.Width = Double.NaN;
+                mainImage.Height = Double.NaN;
+            }
+            else
+            {
+                currentImageSource = BitmapFromUri(new Uri(filePath));
+                mainImage.Source = currentImageSource;
+
+                Resize();
+            }
         }
 
         public void Resize()
@@ -228,8 +291,11 @@ namespace ShotView
             mainImage.Width = Double.NaN;
             mainImage.Height = Double.NaN;
 
-            imagesInFolder.Remove(filePath);
-            File.Delete(filePath);
+            if (File.Exists(filePath))
+            {
+                imagesInFolder.Remove(filePath);
+                File.Delete(filePath);
+            }
 
             if (indexOfImageFolder != 0 && imagesInFolder.Count > 1)
             {

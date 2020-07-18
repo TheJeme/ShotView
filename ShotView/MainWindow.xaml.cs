@@ -47,14 +47,64 @@ namespace ShotView
             imageView.NextImage();
         }
 
+        private void UpdateInfoPanel()
+        {
+            if (imageView.getImageExists())
+            {
+                FileInfoFileNameLabel.Content = imageView.GetFileName();
+                FileInfoFolderPathLabel.Content = imageView.GetFolderPath();
+                FileInfoDimensionsLabel.Content = imageView.GetImageDimensions();
+                FileInfoSizeLabel.Content = imageView.GetFileSize();
+            }
+            else
+            {
+                FileInfoFileNameLabel.Content = "";
+                FileInfoFolderPathLabel.Content = "";
+                FileInfoDimensionsLabel.Content = "";
+                FileInfoSizeLabel.Content = "";
+            }
+        }
+
+        private void ShowInfoPanel()
+        {
+            if (InfoPanel.Visibility == Visibility.Visible)
+            {
+                InfoPanel.Visibility = Visibility.Collapsed;
+            }
+            else if (InfoPanel.Visibility == Visibility.Collapsed)
+            {
+                UpdateInfoPanel();
+                InfoPanel.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void HideTopBar()
+        {
+            if (TopBarGrid.Visibility == Visibility.Visible)
+            {
+                TopBarGrid.Visibility = Visibility.Collapsed;
+                TopBarHiderLabel.Content = "↓ ↓ ↓";
+            }
+            else if (TopBarGrid.Visibility == Visibility.Collapsed)
+            {
+                TopBarGrid.Visibility = Visibility.Visible;
+                TopBarHiderLabel.Content = "↑ ↑ ↑";
+            }
+        }
+
         private void ToggleFullScreen(KeyEventArgs e)
         {
-            if (e.Key == Key.Delete)
+            if (e.Key == Key.Space)
+            {
+                HideTopBar();
+            }
+
+            else if (e.Key == Key.Delete)
             {
                 imageView.DeleteImage();
             }
 
-            if (e.Key == Key.Left)
+            else if (e.Key == Key.Left)
             {
                 imageView.PreviousImage();
             }
@@ -63,7 +113,7 @@ namespace ShotView
                 imageView.NextImage();
             }
 
-            if (e.Key == Key.F11)
+            else if (e.Key == Key.F11)
             {
                 if (!isFullScreen)
                 {
@@ -77,7 +127,7 @@ namespace ShotView
                 }
                 isFullScreen = !isFullScreen;
             }
-            else if (e.Key == Key.F11 && isFullScreen)
+            else if (e.Key == Key.Escape && isFullScreen)
             {
                 WindowState = WindowState.Normal;
                 WindowStyle = WindowStyle.SingleBorderWindow;
@@ -88,7 +138,8 @@ namespace ShotView
 
         private void OpenImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            imageView.OpenImageFileDialog();         
+            imageView.OpenImageFileDialog();
+            UpdateInfoPanel();
         }
     
 
@@ -110,6 +161,12 @@ namespace ShotView
         private void DeleteImage_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             imageView.DeleteImage();
+            UpdateInfoPanel();
+        }
+
+        private void ShowInfo_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ShowInfoPanel();
         }
 
         private void RotateLeft_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -148,11 +205,13 @@ namespace ShotView
         private void Previous_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             imageView.PreviousImage();
+            UpdateInfoPanel();
         }
 
         private void Next_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             imageView.NextImage();
+            UpdateInfoPanel();
         }
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -174,16 +233,7 @@ namespace ShotView
 
         private void HideTopbar_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (TopBarGrid.Visibility == Visibility.Visible)
-            {
-                TopBarGrid.Visibility = Visibility.Collapsed;
-                TopBarHiderLabel.Content = "↓ ↓ ↓";
-            }
-            else if (TopBarGrid.Visibility == Visibility.Collapsed)
-            {
-                TopBarGrid.Visibility = Visibility.Visible;
-                TopBarHiderLabel.Content = "↑ ↑ ↑";
-            }
+            HideTopBar();
         }
     }
 }
