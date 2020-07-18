@@ -86,8 +86,7 @@ namespace ShotView
 
         public string GetFileSize()
         {
-            string fileSize = GetFileSize(new FileInfo(filePath).Length);
-            return fileSize;
+            return GetFileSize(new FileInfo(filePath).Length);
         }
 
         
