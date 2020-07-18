@@ -5,7 +5,7 @@
 
 ## Download
 
-[Download]
+[Download](https://github.com/TheJeme/ShotView/releases/ "ShotView") ShotView.
 
 ## License
 
